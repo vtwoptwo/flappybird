@@ -1,9 +1,10 @@
 
 document.addEventListener("keydown", jump);
 
+
 function jump(event) {
     if (event.keyCode == 32) {
-        birdY -= 45;
+        birdY -= 25;
     }
 }
 
@@ -13,7 +14,7 @@ var points = 0;
 
 
 var canvas = document.getElementById('canvas');
-
+var score = document.getElementById("points");
 
 var context = canvas.getContext('2d');
 var bird=new Image();
@@ -21,12 +22,13 @@ var background=new Image();
 var base=new Image();
 var pipeUp=new Image();
 var pipeDown = new Image(); 
-var gap = pipeUp.height + 90;
+var gap = pipeDown.height + 120;
 // creating conditions for the bird to be able to move
 
 var birdX =10;
 var birdY = 100;
-var gravityFall = 1;
+var gravityFall = 1 ;
+var points = 0;
 
 
 bird.src ="assets/birdMid.png";
@@ -42,6 +44,7 @@ obstacle[0] = {
     y: 0
 }
 
+
 function draw() {
     context.drawImage(background, 0, 0);
 
@@ -52,21 +55,34 @@ function draw() {
        
         obstacle[i].x--;
 
-        if (obstacle[i].x == 50) {
+        if (obstacle[i].x == 30) {
             obstacle.push({
                 x: canvas.width,
                 y: Math.floor(Math.random() * pipeUp.height) - pipeUp.height
             });
         }
 
+        if (birdX + bird.width >= obstacle[i].x && birdX <= obstacle[i].x + pipeDown.width && (birdY <= obstacle[i].y + pipeDown.height || birdY + bird.height >= obstacle[i].y + pipeDown.height + gap)) {
+            
+            alert("Game Over");
+            location.reload();
+        }
+
+        if (obstacle[i].x == 5) {
+            points++;
+        }
+
+
          
     }
 
 
-    context.drawImage(base, 0,canvas.height-base.height);
+    context.drawImage(base, 0,canvas.height - base.height)  ;
     context.drawImage(bird, birdX, birdY);
     birdY += gravityFall;
     requestAnimationFrame(draw);
+
+    score.textContent = points;
     
 }
 
